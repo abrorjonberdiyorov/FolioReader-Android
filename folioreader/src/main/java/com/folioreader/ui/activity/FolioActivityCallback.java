@@ -7,6 +7,7 @@ import com.folioreader.model.locators.ReadLocator;
 
 import java.lang.ref.WeakReference;
 
+
 public interface FolioActivityCallback {
 
     int getCurrentChapterIndex();

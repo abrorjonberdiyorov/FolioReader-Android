@@ -234,7 +234,7 @@ class MediaControllerFragment : BottomSheetDialogFragment() {
             )
         )
         btnTextColorStyle?.setTextColor(
-            UiUtil.getColorList(
+           UiUtil.getColorList(
                 config.themeColor,
                 ContextCompat.getColor(context!!, R.color.grey_color)
             )
@@ -261,38 +261,66 @@ class MediaControllerFragment : BottomSheetDialogFragment() {
 
         btnHalfSpeed?.setOnClickListener {
             toggleSpeedControlButtons(true, false, false, false)
-            EventBus.getDefault().post(MediaOverlaySpeedEvent(MediaOverlaySpeedEvent.Speed.HALF))
+            EventBus.getDefault().post(
+                MediaOverlaySpeedEvent(
+                    MediaOverlaySpeedEvent.Speed.HALF
+                )
+            )
         }
 
         btnOneXSpeed?.setOnClickListener {
             toggleSpeedControlButtons(false, true, false, false)
-            EventBus.getDefault().post(MediaOverlaySpeedEvent(MediaOverlaySpeedEvent.Speed.ONE))
+            EventBus.getDefault().post(
+                MediaOverlaySpeedEvent(
+                    MediaOverlaySpeedEvent.Speed.ONE
+                )
+            )
         }
 
         btnOneAndHalfSpeed?.setOnClickListener {
             toggleSpeedControlButtons(false, false, true, false)
-            EventBus.getDefault().post(MediaOverlaySpeedEvent(MediaOverlaySpeedEvent.Speed.ONE_HALF))
+            EventBus.getDefault().post(
+                MediaOverlaySpeedEvent(
+                    MediaOverlaySpeedEvent.Speed.ONE_HALF
+                )
+            )
         }
 
         btnTwoXSpeed?.setOnClickListener {
             toggleSpeedControlButtons(false, false, false, true)
-            EventBus.getDefault().post(MediaOverlaySpeedEvent(MediaOverlaySpeedEvent.Speed.TWO))
+            EventBus.getDefault().post(
+                MediaOverlaySpeedEvent(
+                    MediaOverlaySpeedEvent.Speed.TWO
+                )
+            )
         }
 
         btnBackColorStyle?.setOnClickListener {
             toggleTextStyle(true, false, false)
-            EventBus.getDefault().post(MediaOverlayHighlightStyleEvent(MediaOverlayHighlightStyleEvent.Style.DEFAULT))
+            EventBus.getDefault().post(
+                MediaOverlayHighlightStyleEvent(
+                    MediaOverlayHighlightStyleEvent.Style.DEFAULT
+                )
+            )
         }
 
         btnTextUnderlineStyle?.setOnClickListener {
             toggleTextStyle(false, true, false)
-            EventBus.getDefault().post(MediaOverlayHighlightStyleEvent(MediaOverlayHighlightStyleEvent.Style.UNDERLINE))
+            EventBus.getDefault().post(
+                MediaOverlayHighlightStyleEvent(
+                    MediaOverlayHighlightStyleEvent.Style.UNDERLINE
+                )
+            )
         }
 
         btnTextColorStyle?.setOnClickListener {
             toggleTextStyle(false, false, true)
             EventBus.getDefault()
-                .post(MediaOverlayHighlightStyleEvent(MediaOverlayHighlightStyleEvent.Style.BACKGROUND))
+                .post(
+                    MediaOverlayHighlightStyleEvent(
+                        MediaOverlayHighlightStyleEvent.Style.BACKGROUND
+                    )
+                )
         }
     }
 

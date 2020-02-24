@@ -20,6 +20,7 @@ import com.folioreader.util.AppUtil;
 import com.folioreader.util.UiUtil;
 import org.readium.r2.shared.Publication;
 
+
 public class ContentHighlightActivity extends AppCompatActivity {
     private boolean mIsNightMode;
     private Config mConfig;

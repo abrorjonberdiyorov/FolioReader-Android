@@ -37,6 +37,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -75,7 +76,7 @@ import org.readium.r2.streamer.parser.PubBox
 import org.readium.r2.streamer.server.Server
 import java.lang.ref.WeakReference
 
-class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
+class FolioActivity : AppCompatActivity(),FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
 
     private var bookFileName: String? = null
@@ -104,7 +105,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var mEpubRawId = 0
     private var mediaControllerFragment: MediaControllerFragment? = null
     private var direction: Config.Direction = Config.Direction.VERTICAL
-    private var portNumber: Int = Constants.DEFAULT_PORT_NUMBER
+    private var portNumber: Int = DEFAULT_PORT_NUMBER
     private var streamerUri: Uri? = null
 
     private var searchUri: Uri? = null
@@ -295,7 +296,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             )
         } else {
             setupBook()
+
         }
+    }
+
+    fun hideToolbar(hideTime:Int){
+
+
+
     }
 
     private fun initActionBar() {
@@ -363,7 +371,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         menuInflater.inflate(R.menu.menu_main, menu)
 
         val config = AppUtil.getSavedConfig(applicationContext)!!
-        UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemSearch).icon)
+       UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemSearch).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemConfig).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemTts).icon)
 
@@ -554,10 +562,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         direction = newDirection
 
         mFolioPageViewPager!!.setDirection(newDirection)
-        mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
-        )
+        mFolioPageFragmentAdapter =
+            FolioPageFragmentAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
         mFolioPageViewPager!!.currentItem = currentChapterIndex
 
@@ -600,8 +609,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 topDistraction += actionBar!!.height
         }
 
-        when (unit) {
-            DisplayUnit.PX -> return topDistraction
+        when (unit) {DisplayUnit.PX -> return topDistraction
 
             DisplayUnit.DP -> {
                 topDistraction /= density.toInt()
@@ -656,7 +664,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else {
             viewportRect.right = displayMetrics!!.widthPixels - viewportRect.right
         }
-        viewportRect.bottom = displayMetrics!!.heightPixels - getBottomDistraction(DisplayUnit.PX)
+        viewportRect.bottom = displayMetrics!!.heightPixels - getBottomDistraction(
+            DisplayUnit.PX)
 
         return viewportRect
     }
@@ -667,7 +676,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         when (unit) {
             DisplayUnit.PX -> return viewportRect
 
-            DisplayUnit.DP -> {
+           DisplayUnit.DP -> {
                 viewportRect.left /= density.toInt()
                 viewportRect.top /= density.toInt()
                 viewportRect.right /= density.toInt()
@@ -803,7 +812,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 // In case if SearchActivity is recreated due to screen rotation then FolioActivity
                 // will also be recreated, so mFolioPageViewPager might be null.
                 if (mFolioPageViewPager == null) return
-                currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
+                currentChapterIndex = getChapterIndex(HREF, searchLocator!!.href)
                 mFolioPageViewPager!!.currentItem = currentChapterIndex
                 val folioPageFragment = currentFragment ?: return
                 folioPageFragment.highlightSearchLocator(searchLocator!!)
@@ -899,17 +908,18 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         })
 
         mFolioPageViewPager!!.setDirection(direction)
-        mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
-            supportFragmentManager,
-            spine, bookFileName, mBookId
-        )
+        mFolioPageFragmentAdapter =
+            FolioPageFragmentAdapter(
+                supportFragmentManager,
+                spine, bookFileName, mBookId
+            )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
 
         // In case if SearchActivity is recreated due to screen rotation then FolioActivity
         // will also be recreated, so searchLocator is checked here.
         if (searchLocator != null) {
 
-            currentChapterIndex = getChapterIndex(Constants.HREF, searchLocator!!.href)
+            currentChapterIndex = getChapterIndex(HREF, searchLocator!!.href)
             mFolioPageViewPager!!.currentItem = currentChapterIndex
             val folioPageFragment = currentFragment ?: return
             folioPageFragment.highlightSearchLocator(searchLocator!!)
@@ -940,7 +950,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (readLocator == null) {
             return 0
         } else if (!TextUtils.isEmpty(readLocator.href)) {
-            return getChapterIndex(Constants.HREF, readLocator.href)
+            return getChapterIndex(HREF, readLocator.href)
         }
 
         return 0
@@ -949,7 +959,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private fun getChapterIndex(caseString: String, value: String): Int {
         for (i in spine!!.indices) {
             when (caseString) {
-                Constants.HREF -> if (spine!![i].href == value)
+                HREF -> if (spine!![i].href == value)
                     return i
             }
         }
@@ -982,7 +992,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private fun setConfig(savedInstanceState: Bundle?) {
 
         var config: Config?
-        val intentConfig = intent.getParcelableExtra<Config>(Config.INTENT_CONFIG)
+        val intentConfig = intent.getParcelableExtra<Config>(
+            Config.INTENT_CONFIG)
         val overrideConfig = intent.getBooleanExtra(Config.EXTRA_OVERRIDE_CONFIG, false)
         val savedConfig = AppUtil.getSavedConfig(this)
 
@@ -1031,7 +1042,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupBook()
             } else {
                 Toast.makeText(this, getString(R.string.cannot_access_epub_message), Toast.LENGTH_LONG).show()

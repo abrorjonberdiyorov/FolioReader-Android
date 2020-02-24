@@ -20,6 +20,13 @@ import com.folioreader.util.AppUtil;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.folioreader.model.dictionary.Audio;
+import com.folioreader.model.dictionary.DictionaryResults;
+import com.folioreader.model.dictionary.Example;
+import com.folioreader.model.dictionary.Pronunciations;
+import com.folioreader.model.dictionary.Senses;
+import com.folioreader.util.AppUtil;
+
 /**
  * @author gautam chibde on 4/7/17.
  */

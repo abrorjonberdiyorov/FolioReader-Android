@@ -14,6 +14,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+import com.folioreader.util.AppUtil;
+
 /**
  * @author gautam chibde on 4/7/17.
  */

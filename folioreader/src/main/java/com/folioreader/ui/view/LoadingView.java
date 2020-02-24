@@ -13,6 +13,7 @@ import com.folioreader.Config;
 import com.folioreader.R;
 import com.folioreader.util.AppUtil;
 import com.folioreader.util.UiUtil;
+import com.folioreader.util.AppUtil;
 
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class LoadingView extends ConstraintLayout {

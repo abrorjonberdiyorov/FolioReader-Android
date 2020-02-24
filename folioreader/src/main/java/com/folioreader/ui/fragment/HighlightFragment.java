@@ -30,6 +30,7 @@ import com.folioreader.util.AppUtil;
 import com.folioreader.util.HighlightUtil;
 import org.greenrobot.eventbus.EventBus;
 
+
 public class HighlightFragment extends Fragment implements HighlightAdapter.HighLightAdapterCallback {
     private static final String HIGHLIGHT_ITEM = "highlight_item";
     private View mRootView;

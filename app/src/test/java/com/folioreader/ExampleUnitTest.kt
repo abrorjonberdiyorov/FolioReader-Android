@@ -1,4 +1,4 @@
-package uz.kitapp
+package com.folioreader
 
 import org.junit.Test
 

@@ -14,7 +14,7 @@
         tools:replace="android:allowBackup">
 
         <provider
-            android:name=".AppContext"
+            android:name="com.folioreader.AppContext"
             android:authorities="${applicationId}.provider.appcontext"
             android:exported="false" />
 

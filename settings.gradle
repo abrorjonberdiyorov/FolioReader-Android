@@ -1,1 +1,1 @@
-include ':folioreader', ':sample', ':app'
+include ':folioreader', ':app'

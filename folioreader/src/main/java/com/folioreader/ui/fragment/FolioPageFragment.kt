@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.folioreader.Config
 import com.folioreader.FolioReader
+import com.folioreader.FolioReader.EXTRA_BOOK_ID
 import com.folioreader.R
 import com.folioreader.mediaoverlay.MediaController
 import com.folioreader.mediaoverlay.MediaControllerCallbacks
@@ -56,7 +57,8 @@ import java.util.regex.Pattern
  * Created by mahavir on 4/2/16.
  */
 class FolioPageFragment : Fragment(),
-    HtmlTaskCallback, MediaControllerCallbacks, FolioWebView.SeekBarListener {
+    HtmlTaskCallback,
+    MediaControllerCallbacks, FolioWebView.SeekBarListener {
 
     companion object {
 
@@ -70,12 +72,17 @@ class FolioPageFragment : Fragment(),
         const val BUNDLE_SEARCH_LOCATOR = "BUNDLE_SEARCH_LOCATOR"
 
         @JvmStatic
-        fun newInstance(spineIndex: Int, bookTitle: String, spineRef: Link, bookId: String): FolioPageFragment {
+        fun newInstance(
+            spineIndex: Int,
+            bookTitle: String,
+            spineRef: Link,
+            bookId: String
+        ): FolioPageFragment {
             val fragment = FolioPageFragment()
             val args = Bundle()
             args.putInt(BUNDLE_SPINE_INDEX, spineIndex)
             args.putString(BUNDLE_BOOK_TITLE, bookTitle)
-            args.putString(FolioReader.EXTRA_BOOK_ID, bookId)
+            args.putString(EXTRA_BOOK_ID, bookId)
             args.putSerializable(BUNDLE_SPINE_ITEM, spineRef)
             fragment.arguments = args
             return fragment
@@ -145,7 +152,7 @@ class FolioPageFragment : Fragment(),
         spineIndex = arguments!!.getInt(BUNDLE_SPINE_INDEX)
         mBookTitle = arguments!!.getString(BUNDLE_BOOK_TITLE)
         spineItem = arguments!!.getSerializable(BUNDLE_SPINE_ITEM) as Link
-        mBookId = arguments!!.getString(FolioReader.EXTRA_BOOK_ID)
+        mBookId = arguments!!.getString(EXTRA_BOOK_ID)
 
         chapterUrl = Uri.parse(mActivityCallback?.streamerUrl + spineItem.href!!.substring(1))
 
@@ -157,11 +164,17 @@ class FolioPageFragment : Fragment(),
             //    mediaController = new MediaController(getActivity(), MediaController.MediaType.SMIL, this);
             //    hasMediaOverlay = true;
             //} else {
-            mediaController = MediaController(activity, MediaController.MediaType.TTS, this)
+            mediaController = MediaController(
+                activity,
+                MediaController.MediaType.TTS,
+                this
+            )
             mediaController!!.setTextToSpeech(activity)
             //}
         }
-        highlightStyle = HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.Normal)
+        highlightStyle = HighlightImpl.HighlightStyle.classForStyle(
+            HighlightImpl.HighlightStyle.Normal
+        )
         mRootView = inflater.inflate(R.layout.folio_page_fragment, container, false)
         mPagesLeftTextView = mRootView!!.findViewById<View>(R.id.pagesLeft) as TextView
         mMinutesLeftTextView = mRootView!!.findViewById<View>(R.id.minutesLeft) as TextView
@@ -218,13 +231,24 @@ class FolioPageFragment : Fragment(),
         if (isAdded) {
             when (event.style) {
                 MediaOverlayHighlightStyleEvent.Style.DEFAULT -> highlightStyle =
-                        HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.Normal)
+                    HighlightImpl.HighlightStyle.classForStyle(
+                        HighlightImpl.HighlightStyle.Normal
+                    )
                 MediaOverlayHighlightStyleEvent.Style.UNDERLINE -> highlightStyle =
-                        HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.DottetUnderline)
+                    HighlightImpl.HighlightStyle.classForStyle(
+                        HighlightImpl.HighlightStyle.DottetUnderline
+                    )
                 MediaOverlayHighlightStyleEvent.Style.BACKGROUND -> highlightStyle =
-                        HighlightImpl.HighlightStyle.classForStyle(HighlightImpl.HighlightStyle.TextColor)
+                   HighlightImpl.HighlightStyle.classForStyle(
+                        HighlightImpl.HighlightStyle.TextColor
+                    )
             }
-            mWebview!!.loadUrl(String.format(getString(R.string.setmediaoverlaystyle), highlightStyle))
+            mWebview!!.loadUrl(
+                String.format(
+                    getString(R.string.setmediaoverlaystyle),
+                    highlightStyle
+                )
+            )
         }
     }
 
@@ -235,7 +259,7 @@ class FolioPageFragment : Fragment(),
      * @param reloadDataEvent empty POJO.
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun reload(reloadDataEvent: ReloadDataEvent) {
+    fun reload(reloadDataEvent:ReloadDataEvent) {
 
         if (isCurrentFragment)
             getLastReadLocator()
@@ -263,7 +287,8 @@ class FolioPageFragment : Fragment(),
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun updateHighlight(event: UpdateHighlightEvent) {
         if (isAdded) {
-            this.rangy = HighlightUtil.generateRangyString(pageName)
+            this.rangy =
+                HighlightUtil.generateRangyString(pageName)
             loadRangy(this.rangy)
         }
     }
@@ -281,7 +306,7 @@ class FolioPageFragment : Fragment(),
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun resetCurrentIndex(resetIndex: RewindIndexEvent) {
+    fun resetCurrentIndex(resetIndex:RewindIndexEvent) {
         if (isCurrentFragment) {
             mWebview!!.loadUrl("javascript:rewindCurrentIndex()")
         }
@@ -319,7 +344,11 @@ class FolioPageFragment : Fragment(),
             uiHandler.post {
                 mWebview!!.loadDataWithBaseURL(
                     mActivityCallback?.streamerUrl + path,
-                    HtmlUtil.getHtmlContent(mWebview!!.context, mHtmlString, mConfig!!),
+                    HtmlUtil.getHtmlContent(
+                        mWebview!!.context,
+                        mHtmlString,
+                        mConfig!!
+                    ),
                     mimeType,
                     "UTF-8", null
                 )
@@ -362,7 +391,8 @@ class FolioPageFragment : Fragment(),
 
         setupScrollBar()
         mWebview!!.addOnLayoutChangeListener { view, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            val height = Math.floor((mWebview!!.contentHeight * mWebview!!.scale).toDouble()).toInt()
+            val height =
+                Math.floor((mWebview!!.contentHeight * mWebview!!.scale).toDouble()).toInt()
             val webViewHeight = mWebview!!.measuredHeight
             mScrollSeekbar!!.maximum = height - webViewHeight
         }
@@ -408,12 +438,13 @@ class FolioPageFragment : Fragment(),
                 String.format(
                     getString(R.string.setmediaoverlaystyle),
                     HighlightImpl.HighlightStyle.classForStyle(
-                        HighlightImpl.HighlightStyle.Normal
+                       HighlightImpl.HighlightStyle.Normal
                     )
                 )
             )
 
-            val rangy = HighlightUtil.generateRangyString(pageName)
+            val rangy =
+                HighlightUtil.generateRangyString(pageName)
             this@FolioPageFragment.rangy = rangy
             if (!rangy.isEmpty())
                 loadRangy(rangy)
@@ -466,7 +497,8 @@ class FolioPageFragment : Fragment(),
                     readLocator = mActivityCallback!!.entryReadLocator
                 } else {
                     Log.v(LOG_TAG, "-> onPageFinished -> took from bundle")
-                    readLocator = savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
+                    readLocator =
+                        savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                     savedInstanceState!!.remove(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                 }
 
@@ -520,7 +552,10 @@ class FolioPageFragment : Fragment(),
 
         // prevent favicon.ico to be loaded automatically
         @SuppressLint("NewApi")
-        override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
+        override fun shouldInterceptRequest(
+            view: WebView,
+            request: WebResourceRequest
+        ): WebResourceResponse? {
             if (!request.isForMainFrame
                 && request.url.path != null
                 && request.url.path!!.endsWith("/favicon.ico")
@@ -546,7 +581,12 @@ class FolioPageFragment : Fragment(),
 
         override fun onProgressChanged(view: WebView, progress: Int) {}
 
-        override fun onJsAlert(view: WebView, url: String, message: String, result: JsResult): Boolean {
+        override fun onJsAlert(
+            view: WebView,
+            url: String,
+            message: String,
+            result: JsResult
+        ): Boolean {
 
             // Check if this `if` block can be dropped?
             if (!this@FolioPageFragment.isVisible)
@@ -561,7 +601,8 @@ class FolioPageFragment : Fragment(),
 
             } else {
                 // to handle TTS playback when highlight is deleted.
-                val p = Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
+                val p =
+                    Pattern.compile("[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}")
                 if (!p.matcher(message).matches() && message != "undefined" && isCurrentFragment) {
                     mediaController!!.speakAudio(message)
                 }
@@ -608,8 +649,12 @@ class FolioPageFragment : Fragment(),
             locations.cfi = cfi
             lastReadLocator = ReadLocator(mBookId!!, href, created, locations)
 
-            val intent = Intent(FolioReader.ACTION_SAVE_READ_LOCATOR)
-            intent.putExtra(FolioReader.EXTRA_READ_LOCATOR, lastReadLocator as Parcelable?)
+            val intent =
+                Intent(FolioReader.ACTION_SAVE_READ_LOCATOR)
+            intent.putExtra(
+                FolioReader.EXTRA_READ_LOCATOR,
+                lastReadLocator as Parcelable?
+            )
             LocalBroadcastManager.getInstance(context!!).sendBroadcast(intent)
 
             (this as java.lang.Object).notify()
@@ -636,14 +681,21 @@ class FolioPageFragment : Fragment(),
     }
 
     private fun setupScrollBar() {
-        UiUtil.setColorIntToDrawable(mConfig!!.themeColor, mScrollSeekbar!!.progressDrawable)
+        UiUtil.setColorIntToDrawable(
+            mConfig!!.themeColor,
+            mScrollSeekbar!!.progressDrawable
+        )
         val thumbDrawable = ContextCompat.getDrawable(activity!!, R.drawable.icons_sroll)
-        UiUtil.setColorIntToDrawable(mConfig!!.themeColor, thumbDrawable!!)
+       UiUtil.setColorIntToDrawable(
+            mConfig!!.themeColor,
+            thumbDrawable!!
+        )
         mScrollSeekbar!!.thumb = thumbDrawable
     }
 
     private fun initSeekbar() {
-        mScrollSeekbar = mRootView!!.findViewById<View>(R.id.scrollSeekbar) as VerticalSeekbar
+        mScrollSeekbar =
+            mRootView!!.findViewById<View>(R.id.scrollSeekbar) as VerticalSeekbar
         mScrollSeekbar!!.progressDrawable
             .setColorFilter(
                 resources
@@ -666,7 +718,8 @@ class FolioPageFragment : Fragment(),
     private fun updatePagesLeftText(scrollY: Int) {
         try {
             val currentPage = (Math.ceil(scrollY.toDouble() / mWebview!!.webViewHeight) + 1).toInt()
-            val totalPages = Math.ceil(mWebview!!.contentHeightVal.toDouble() / mWebview!!.webViewHeight).toInt()
+            val totalPages =
+                Math.ceil(mWebview!!.contentHeightVal.toDouble() / mWebview!!.webViewHeight).toInt()
             val pagesRemaining = totalPages - currentPage
             val pagesRemainingStrFormat = if (pagesRemaining > 1)
                 getString(R.string.pages_left)
@@ -677,7 +730,8 @@ class FolioPageFragment : Fragment(),
                 pagesRemainingStrFormat, pagesRemaining
             )
 
-            val minutesRemaining = Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
+            val minutesRemaining =
+                Math.ceil((pagesRemaining * mTotalMinutes).toDouble() / totalPages).toInt()
             val minutesRemainingStr: String
             if (minutesRemaining > 1) {
                 minutesRemainingStr = String.format(
@@ -769,19 +823,26 @@ class FolioPageFragment : Fragment(),
         outState.putParcelable(BUNDLE_SEARCH_LOCATOR, searchLocatorVisible)
     }
 
-    fun highlight(style: HighlightImpl.HighlightStyle, isAlreadyCreated: Boolean) {
+    fun highlight(
+        style: HighlightImpl.HighlightStyle,
+        isAlreadyCreated: Boolean
+    ) {
         if (!isAlreadyCreated) {
             mWebview!!.loadUrl(
                 String.format(
                     "javascript:if(typeof ssReader !== \"undefined\"){ssReader.highlightSelection('%s');}",
-                    HighlightImpl.HighlightStyle.classForStyle(style)
+                    HighlightImpl.HighlightStyle.classForStyle(
+                        style
+                    )
                 )
             )
         } else {
             mWebview!!.loadUrl(
                 String.format(
                     "javascript:setHighlightStyle('%s')",
-                    HighlightImpl.HighlightStyle.classForStyle(style)
+                    HighlightImpl.HighlightStyle.classForStyle(
+                        style
+                    )
                 )
             )
         }
@@ -818,7 +879,11 @@ class FolioPageFragment : Fragment(),
     @JavascriptInterface
     fun getUpdatedHighlightId(id: String?, style: String) {
         if (id != null) {
-            val highlightImpl = HighLightTable.updateHighlightStyle(id, style)
+            val highlightImpl =
+                HighLightTable.updateHighlightStyle(
+                    id,
+                    style
+                )
             if (highlightImpl != null) {
                 HighlightUtil.sendHighlightBroadcastEvent(
                     activity!!.applicationContext,
@@ -826,7 +891,8 @@ class FolioPageFragment : Fragment(),
                     HighLight.HighLightAction.MODIFY
                 )
             }
-            val rangyString = HighlightUtil.generateRangyString(pageName)
+            val rangyString =
+                HighlightUtil.generateRangyString(pageName)
             activity!!.runOnUiThread { loadRangy(rangyString) }
 
         }

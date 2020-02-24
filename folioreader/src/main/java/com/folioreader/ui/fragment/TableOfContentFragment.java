@@ -24,6 +24,7 @@ import org.readium.r2.shared.Publication;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import static com.folioreader.Constants.*;
 
 public class TableOfContentFragment extends Fragment implements TOCAdapter.TOCCallback {

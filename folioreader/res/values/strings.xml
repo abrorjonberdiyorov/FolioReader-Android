@@ -12,6 +12,13 @@
     <string name="lora_font">fonts/lora/Lora-Regular.ttf</string>
     <string name="raleway_font">fonts/raleway/Raleway-Regular.ttf</string>
 
+    <string name="baskerville_font">fonts/baskerville/baskerville_regular.ttf</string>
+    <string name="bookerly_font">fonts/bookerly/bookerly_regular.ttf</string>
+    <string name="futura_font">fonts/futura/futura_regular.ttf</string>
+    <string name="georgia_font">fonts/georgia/georgia.ttf</string>
+    <string name="palatino_font">fonts/palatino/palatino_regular.ttf</string>
+    <string name="timesnewroman_font">fonts/timesnewroman/times_new_roman.ttf</string>
+
     <string name="minutes_left">%1$d minutes ·&#160;</string>
     <string name="minute_left">%1$d minute ·&#160;</string>
     <string name="less_than_minute">Less than a minute ·&#160;</string>
@@ -115,5 +122,11 @@
     <string name="callScrollToCfi" translatable="false">javascript:scrollToCfi(\"%s\")</string>
     <string name="callHighlightSearchLocator" translatable="false">javascript:highlightSearchLocator(\"%s\")</string>
     <string name="callClearSelection" translatable="false">javascript:clearSelection()</string>
+    <string name="baskerville">Baskerville</string>
+    <string name="bookerly">Bookerly</string>
+    <string name="futura">Futura</string>
+    <string name="palatino">Palatino</string>
+    <string name="timesnewroman">Times New Roman</string>
+    <string name="georgia">Georgia</string>
 
 </resources>
